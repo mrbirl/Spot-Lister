@@ -41,10 +41,16 @@ for region_name, region_id in region_ids.iteritems():
 		except:
 			print 'FAILED: %s %s %d' % (region_name, area_name, (int(area_id)))
 
-		area_info[area_name] = area_spots  # Save this areas info
+		if area_spots:  # Don't save places with no spots
+			area_info[area_name] = area_spots  # Save this areas info
 
-	results[region_name] = area_info
-print results
+	if area_info:  # Only save areas that aren't empty
+		results[region_name] = area_info
+
+with open('windguru_spots.json', 'w') as wf:
+	json.dump(results, wf, sort_keys=True, indent=4)
+
+print 'Done'
 
 
 
