@@ -19,7 +19,7 @@ region_ids = {
 for region_name, region_id in region_ids.iteritems():
 	region_req_url = 'http://old.windguru.cz/int/ajax/wg_ajax_json_select.php?' \
 				   'q=zeme&id_georegion=%d&exist_spots=1&id_model=0' % region_id
-	region_response = requests.get(region_req_url).json()
+	region_response = json.loads(requests.get(region_req_url).text)
 	area_info = {}
 
 	''' For each area, get a list of spots '''
@@ -28,7 +28,7 @@ for region_name, region_id in region_ids.iteritems():
 		area_name = area_item[1]
 		area_req_url = 'http://old.windguru.cz/int/ajax/wg_ajax_json_select.php?'\
 					   'q=spots&id_zeme=%d&id_region=0&id_georegion=%d&cats=4' % (area_id, region_id)
-		area_response = requests.get(area_req_url).json()
+		area_response = json.loads(requests.get(area_req_url).text)
 		area_spots = {}
 
 		try:
