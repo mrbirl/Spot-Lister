@@ -27,10 +27,12 @@ for region_id in range(1, 13):
 				# Save spots for this area
 				area_spots[spot['name']] = spot['url']
 
-			area_results[area_name] = area_spots
-			print 'Finished ' + area_name
+			if area_spots:
+				area_results[area_name] = area_spots
+			print 'Finished %s' % area_name
 
-	results[region_name] = area_results
+	if area_results:
+		results[region_name] = area_results
 
 with open('magicseaweed_spots.json', 'w') as wf:
 	json.dump(results, wf, sort_keys=True, indent=4)
