@@ -1,5 +1,6 @@
 import json
 import requests
+import io
 
 results = {}
 
@@ -19,7 +20,9 @@ region_ids = {
 for region_name, region_id in region_ids.iteritems():
 	region_req_url = 'http://old.windguru.cz/int/ajax/wg_ajax_json_select.php?' \
 				   'q=zeme&id_georegion=%d&exist_spots=1&id_model=0' % region_id
-	region_response = json.loads(requests.get(region_req_url).text)
+	region_response = requests.get(region_req_url)
+	region_response = requests.utils.get_unicode_from_response(region_response)
+	region_response = json.loads(region_response, encoding='utf-8')
 	area_info = {}
 
 	''' For each area, get a list of spots '''
@@ -28,7 +31,9 @@ for region_name, region_id in region_ids.iteritems():
 		area_name = area_item[1]
 		area_req_url = 'http://old.windguru.cz/int/ajax/wg_ajax_json_select.php?'\
 					   'q=spots&id_zeme=%d&id_region=0&id_georegion=%d&cats=4' % (area_id, region_id)
-		area_response = json.loads(requests.get(area_req_url).text)
+		area_response = requests.get(area_req_url)
+		area_response = requests.utils.get_unicode_from_response(area_response)
+		area_response = json.loads(area_response, encoding='utf-8')
 		area_spots = {}
 
 		try:
@@ -47,8 +52,9 @@ for region_name, region_id in region_ids.iteritems():
 	if area_info:  # Only save areas that aren't empty
 		results[region_name] = area_info
 
-with open('windguru_spots.json', 'w') as wf:
-	json.dump(results, wf, sort_keys=True, indent=4)
+with io.open("windguru_spots.json",'w', encoding="utf-8") as outfile:
+  outfile.write(unicode(json.dumps(results, ensure_ascii=False, sort_keys=True, indent=4)))
+
 
 print 'Done'
 

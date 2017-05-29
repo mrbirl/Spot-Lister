@@ -38,6 +38,6 @@ for region_id in range(1, 13):
 		results[region_name] = area_results
 
 with io.open("magicseaweed_spots.json",'w', encoding="utf-8") as outfile:
-  outfile.write(unicode(json.dumps(results, ensure_ascii=False, indent=4)))
+  outfile.write(unicode(json.dumps(results, ensure_ascii=False, sort_keys=True, indent=4)))
 
 print 'Done'
